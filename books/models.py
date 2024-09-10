@@ -13,4 +13,4 @@ class Books(models.Model):
     is_reserved = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title, " from ", self.author
+        return self.title
