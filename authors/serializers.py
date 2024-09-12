@@ -12,3 +12,9 @@ class AuthorsSerializer(serializers.ModelSerializer):
             'nationality',
             'date_of_birth',
         ]
+
+
+class AuthorsListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Authors
+        fields = ['id', 'name',]

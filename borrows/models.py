@@ -9,6 +9,7 @@ class BorrowTransactions(models.Model):
     book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name='borrows')
     borrow_date = models.DateField(auto_now_add=True)
     return_date = models.DateField(blank=True, null=True)
+    is_flagged = models.BooleanField(default=False)
 
     def add_return_date(self):
         self.return_date = date.today()
