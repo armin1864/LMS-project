@@ -26,6 +26,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=100, blank=True, null=True)
     phone_number = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True, unique=True)
+    total_reserves = models.IntegerField(default=0)
     registration_date = models.DateField(default=timezone.now())
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

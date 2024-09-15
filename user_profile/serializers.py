@@ -11,5 +11,6 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
             'phone_number',
             'email',
+            'total_reserves',
             'registration_date',
         ]
