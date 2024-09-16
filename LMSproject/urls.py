@@ -8,8 +8,9 @@ urlpatterns = [
     path('api/v1/authors/', include('authors.urls'), name='authors'),
     path('api/v1/books/', include('books.urls'), name='books'),
     path('api/v1/borrow/', include('borrows.urls'), name='borrow'),
-    # path('api/v1/reservation/', include('reservations.urls'), name='reservation'),
+    path('api/v1/reservation/', include('reservations.urls'), name='reservation'),
     path('api/v1/search/', include('search.urls'), name='search'),
     path('api/v1/profile/', include('user_profile.urls'), name='user_profile'),
+    path('api/v1/review/', include('reviews.urls'), name='reviews_and_ratings')
 
 ]

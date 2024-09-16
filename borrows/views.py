@@ -11,8 +11,7 @@ from books.models import Books
 def add_borrow_transaction(request):
 
     borrower = request.user
-    total_reserve = borrower.total_reserves
-    if not total_reserve < 5:  # for number of borrows limit
+    if not borrower.total_borrows < 5:  # for number of borrows limit
         return Response({'error': 'borrow limit reached'})
 
     end_date = request.data.get('end_borrow_date')
@@ -30,7 +29,7 @@ def add_borrow_transaction(request):
     transaction.save()
     book.is_borrowed = True
     book.save()
-    borrower.total_reserves += 1  # for number of borrows limit
+    borrower.total_borrows += 1  # for number of borrows limit
     borrower.save()
     return Response('successful borrow')
 
@@ -47,5 +46,7 @@ def return_borrow(request):
     except BorrowTransactions.DoesNotExist:
         return Response({'error': 'no such borrow found'})
     borrow_transaction.add_return_date()
-    borrower.total_reserves -= 1  # for number of borrows limit
+    borrower.total_borrows -= 1  # for number of borrows limit
     borrower.save()
+    return Response('successful return')
+
