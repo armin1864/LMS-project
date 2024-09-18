@@ -3,13 +3,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import BorrowTransactions
 from books.models import Books
+from reservations.models import Reservations
 
 
 # receive a json with id and end_date and checks info and users number of borrow, if was ok adds a transaction
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_borrow_transaction(request):
-
     borrower = request.user
     if not borrower.total_borrows < 5:  # for number of borrows limit
         return Response({'error': 'borrow limit reached'})
@@ -22,8 +22,12 @@ def add_borrow_transaction(request):
         book = Books.objects.get(pk=book_id)
     except Books.DoesNotExist:
         return Response({'error': 'no book with this id'})
-    if book.is_borrowed or book.is_reserved:
-        return Response({'error': 'this book already borrowed or reserved'})
+    if book.is_borrowed:
+        return Response({'error': 'this book already borrowed'})
+    if book.is_reserved:
+        reserve_by_user = Reservations.objects.filter(reserver=borrower, book=book)
+        if not reserve_by_user:
+            return Response({'error': 'this book already reserved by other user'})
 
     transaction = BorrowTransactions(borrower=borrower, book=book, end_borrow_date=end_date)
     transaction.save()
@@ -31,6 +35,9 @@ def add_borrow_transaction(request):
     book.save()
     borrower.total_borrows += 1  # for number of borrows limit
     borrower.save()
+    reserve_check = Reservations.objects.filter(reserver=borrower, book=book)  # check if user already reserved
+    if reserve_check:  # if user reserved book then delete reserve
+        reserve_check.delete()
     return Response('successful borrow')
 
 
@@ -49,4 +56,3 @@ def return_borrow(request):
     borrower.total_borrows -= 1  # for number of borrows limit
     borrower.save()
     return Response('successful return')
-

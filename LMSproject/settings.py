@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'reservations',
     'search',
     'user_profile',
+    'reviews',
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +151,14 @@ REST_FRAMEWORK = {
 }
 
 
+# CELERY SETUP
+CELERY_BROKER_URL = 'django-db'
+CELERY_RESULT_BACKEND = 'django-db'
+
+CELERY_BEAT_SCHEDULE = {
+    'run-every-day-task': {
+        'task': ['borrows.tasks.check_and_flag', 'reservations.tasks.notify_reservation',
+                 'borrows.tasks.notify_overdue', 'admin_page.tasks.make_report'],
+        'schedule': 86400.0,
+    },
+}

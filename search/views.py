@@ -4,7 +4,7 @@ from books.serializers import BooksListSerializer
 from books.models import Books
 
 
-# these three functions are more restful but not good that much. go to bottom for the used function
+# these three functions are more RESTful but not good that much. go to bottom for the used function
 '''
 @api_view(['GET'])
 def search_books_by_category(request, category):
