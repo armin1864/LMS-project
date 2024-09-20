@@ -46,13 +46,13 @@ INSTALLED_APPS = [
     'books',
     'borrows',
     'login',
-    'notifications',
     'reservations',
     'search',
     'user_profile',
     'reviews',
     'django_celery_beat',
     'django_celery_results',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -95,7 +95,7 @@ DATABASES = {
         'NAME': 'lms',
         'USER': 'postgres',
         'PASSWORD': 'password',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432'
     }
 }
@@ -152,8 +152,15 @@ REST_FRAMEWORK = {
 
 
 # CELERY SETUP
-CELERY_BROKER_URL = 'django-db'
-CELERY_RESULT_BACKEND = 'django-db'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
 
 CELERY_BEAT_SCHEDULE = {
     'run-every-day-task': {

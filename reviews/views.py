@@ -22,11 +22,14 @@ def submit_review(request):
     except BorrowTransactions.DoesNotExist:
         return Response({'error': 'this user doesnt borrow this book'})
 
-    if ReviewAndRatings.objects.get(transaction=transaction):  # for check if user already reviewed or not
+    try:
+        reviewed_before = ReviewAndRatings.objects.get(transaction=transaction)
+    except ReviewAndRatings.DoesNotExist:
+        reviewed_before = False
+    if reviewed_before:  # for check if user already reviewed or not
         return Response({'error': 'this user already reviewed this book'})
 
-    new_review = ReviewAndRatings(transaction=transaction, review=review, rating=rating)
-    new_review.save()
+    ReviewAndRatings.objects.create(book=book, transaction=transaction, review=review, rating=rating)
     return Response('successful review')
 
 
